@@ -1,4 +1,2 @@
-python-telegram-bot==20.7
 requests
-pkg install python
-pip install --upgrade pip
+colorama
