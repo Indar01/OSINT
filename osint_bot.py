@@ -1,112 +1,139 @@
-import logging  # 'i' small kar diya
 import requests
+import json
+import time
+import os
+import sys
 import urllib.parse
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryH>
+from colorama import init, Fore, Back, Style
 
-# --- CONFIGURATION ---
-TOKEN = "7972645769:AAED-kqyl_Ph0cMe4Iw70tmhnuJvNWnvdXY" # Naya token use karein security ke liye
-API_BASE_URL = "http://osintx.info/API/krobetahack.php"
-MOBILE_KEY = "ZYROBR0TH3R"
-ID_KEY = "XXYYZZZYRO"
+# Initialize colorama
+init(autoreset=True)
 
-# Logging setup
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-# --- HELPER FUNCTIONS ---
+def print_banner():
+    clear_screen()
+    banner = f"""
+{Fore.CYAN}╔{'═' * 60}╗
+{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}   ██████  ███████ ██ ███    ██ ████████ {Fore.CYAN}║                             {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██ ██      ██ ████   ██    ██    {Fore.CYAN}║
+{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██ ███████ ██ ██ ██  ██    ██    {Fore.CYAN}║                             {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██      ██ ██ ██  ██ ██    ██    {Fore.CYAN}║                             {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}   ██████  ███████ ██ ██   ████    ██    {Fore.CYAN}║
+{Fore.CYAN}╚{'═' * 60}╝
+{Fore.YELLOW}        >> v6.0 | OSINT LINKER | EXIT OPTION ENABLED <<
+"""
+    print(banner)
+
+
+def get_user_input():
+    print(f"{Fore.WHITE}{Back.RED} 🛠️  MAIN MENU {Style.RESET_ALL}")
+    print(f"{Fore.GREEN} [1] 📱 MOBILE NO· LOOKUP")
+    print(f"{Fore.BLUE} [2] 🆔 AADHAR ID LOOKUP")
+    print(f"{Fore.RED} [0] 🚪 EXIT SYSTEM")
+
+    while True:
+        choice = input(f"\n{Fore.MAGENTA}┌──(Select Module)─╼ {Fore.WHITE}").strip()
+
+        if choice == "1":
+            term = input(f"{Fore.GREEN}└──╼ Enter Mobile Number: {Style.RESET_ALL}").strip()
+            return term, "mobile", "ZYROBR0TH3R", "http://osintx.info/API/krobetahack.php"
+        elif choice == "2":
+            term = input(f"{Fore.BLUE}└──╼ Enter ID Number: {Style.RESET_ALL}").strip()
+            return term, "id_number", "XXYYZZZYRO", "https://osintx.info/API/krobetahack.php"
+        elif choice == "0":
+            print(f"\n{Fore.RED}🔴 Connection Terminated. Goodbye!")
+            sys.exit()
+        else:
+            print(f"{Fore.RED}⚠️ Invalid choice! Please try again.")
+
 def generate_map_link(address):
+    """Convert address to Google Maps search link"""
     if not address or address == "N/A":
         return None
-    base = "https://www.google.com/maps/search/" # Sahi map base link
-    return base + urllib.parse.quote(str(address))
+    base_url = "https://www.google.com/maps/search/"
+    return base_url + urllib.parse.quote(str(address))
 
-# --- BOT HANDLERS ---
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-    welcome_msg = (
-        f"🔥 *OSINT Intelligence Bot v6.0* 🔥\n\n"
-        f"Welcome {user.first_name}!\n"
-        f"Main niche diye gaye modules ka use karke data extract kar sakta hoon.\n\n"
-        f"🛡️ *Authorized Pentest Tool*"
-    )
-
-    keyboard = [
-        [InlineKeyboardButton("📱 Mobile Lookup", callback_data='mode_mobile')],
-        [InlineKeyboardButton("🆔 ID/CNIC Lookup", callback_data='mode_id')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    await update.message.reply_text(welcome_msg, reply_markup=reply_markup, parse_mode='Markdown')
-
-async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-
-    if query.data == 'mode_mobile':
-        context.user_data['mode'] = 'mobile'
-        await query.edit_message_text("📱 *Mobile Mode Active*\nAb apna Number send karein (e.g. 03xxxxxxxx>
-    elif query.data == 'mode_id':
-        context.user_data['mode'] = 'id_number'
-        await query.edit_message_text("🆔 *ID Mode Active*\nAb apna ID Number send karein:", parse_mode='Ma>
-
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    mode = context.user_data.get('mode')
-    if not mode:
-        await update.message.reply_text("❌ Pehle /start dabakar mode select karein!")
+def display_smart_table(data):
+    if not data:
+        print(f"\n{Fore.RED}🚫 [EMPTY RESPONSE] - No data found.")
         return
 
-    term = update.message.text.strip()
-    api_key = MOBILE_KEY if mode == 'mobile' else ID_KEY
+    icons = {
+        "name": "👤",
+        "fname": "👨‍👦",
+        "address": "🏠",
+        "city": "🏙️",
+        "nic": "🆔",
+        "number": "📞",
+        "operator": "📡",
+        "date": "📅",
+        "location": "📍",
+    }
 
-    status_msg = await update.message.reply_text("📡 *Searching Database... Please wait.*", parse_mode='Mar>
+    print(f"\n{Fore.YELLOW}╔═{'═' * 28}═╦═{'═' * 45}═╗")
+    print(f"{Fore.YELLOW}║ {Fore.CYAN}{Style.BRIGHT}{'FIELD NAME':^28} {Fore.YELLOW}║ {Fore.CYAN}{Style.BRIGHT}{'EXTRAC>
+    print(f"{Fore.YELLOW}╠═{'═' * 28}═╬═{'═' * 45}═╣")
 
-    try:
-        url = f"{API_BASE_URL}?key={api_key}&type={mode}&term={term}"
-        response = requests.get(url, timeout=20)
-        data = response.json()
+    address_val = None
 
-        if data:
-            result_text = f"🎯 *TARGET INTEL REPORT*\n{'═'*25}\n"
-            address_val = None
+    if isinstance(data, list) and data:
+        items = data[0].items()
+    elif isinstance(data, dict):
+        items = data.items()
+    else:
+        print(f"{Fore.RED}❌ Unknown data format")
+        return
 
-            # Agar list hai toh pehla item lo, varna dict
-            items = data[0] if isinstance(data, list) and len(data) > 0 else data
+    for key, value in items:
+        icon = icons.get(key.lower(), "🔹")
+        key_label = f"{icon} {key.upper()}"
 
-            if isinstance(items, dict):
-                for key, value in items.items():
-                    if value and value != "N/A":
-                        result_text += f"🔹 *{key.upper()}:* `{value}`\n"
-                        if key.lower() in ['address', 'location', 'city', 'permanent_address']:
-                            address_val = value
-            else:
-                result_text += "❌ Data format unknown."
+        if key.lower() in ["address", "location", "city"]:
+            if value and value != "N/A":
+                address_val = value
 
-            if address_val:
-                map_url = generate_map_link(address_val)
-                result_text += f"\n📍 [View on Google Maps]({map_url})"
+        print(
+            f"{Fore.YELLOW}║ {Fore.GREEN}{key_label:<28} {Fore.YELLOW}║ {Fore.WHITE}{str(value)[:45]:<45} {Fore.YELLOW}>
+        )
 
-            result_text += f"\n{'═'*25}\n✅ *Scan Complete*"
-            await status_msg.edit_text(result_text, parse_mode='Markdown')
-        else:
-            await status_msg.edit_text("💀 *GHOST TARGET* - No data found in database.")
+    if address_val:
+        map_link = generate_map_link(address_val)
+        print(f"{Fore.YELLOW}╠═{'═' * 28}═╬═{'═' * 45}═╣")
+        print(
+            f"{Fore.YELLOW}║ {Fore.RED}{'📍 MAP LINK':<28} {Fore.YELLOW}║ {Fore.BLUE}{map_link[:45]:<45} {Fore.YELLOW}║"
+        )
+        if len(map_link) > 45:
+            print(
+                f"{Fore.YELLOW}║ {'':<28} {Fore.YELLOW}║ {Fore.BLUE}{map_link[45:90]:<45} {Fore.YELLOW}║"
+            )
 
-    except Exception as e:
-        await status_msg.edit_text(f"🛑 *API Error:* {str(e)}")
+    print(f"{Fore.YELLOW}╚═{'═' * 28}═╩═{'═' * 45}═╝")
+    print(f"{Fore.GREEN}✅ RECON COMPLETE.")
 
-# --- MAIN ---
 def main():
-    # Token check
-    if TOKEN == "7972645769:AAED-kqyl_Ph0cMe4Iw70tmhnuJvNWnvdXY":
-        print("⚠️ Warning: Token purana hai, agar error aaye toh naya token use karein.")
+    while True:
+        print_banner()
+        term, api_type, api_key, base_url = get_user_input()
 
-    application = Application.builder().token(TOKEN).build()
+        print(f"\n{Fore.CYAN}📡 Requesting Data...", end="\r")
 
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CallbackQueryHandler(button_handler))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+        try:
+            api_url = f"{base_url}?key={api_key}&type={api_type}&term={term}"
+            response = requests.get(api_url, timeout=20)
 
-    print("🚀 Bot is running...")
-    application.run_polling()
+            if response.status_code == 200:
+                try:
+                    result_data = response.json()
+                    display_smart_table(result_data)
+                except json.JSONDecodeError:
+                    print(f"\n{Fore.YELLOW}📝 Raw Output: {Fore.WHITE}{response.text}")
+            else:
+                print(f"\n{Fore.RED}❌ Server Error: {response.status_code}")
 
-if __name__ == '__main__':
+        except Exception as e:
+            print(f"\n{Fore.RED}🛑 Error: {e}")
+
+        print(f"\n{Fore.YELLOW}Press Enter to go back to Menu...")
+        input()
+
+if __name__ == "__main__":
     main()
