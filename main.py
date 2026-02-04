@@ -14,7 +14,8 @@ def clear_screen():
 
 def print_banner():
     clear_screen()
-    banner = f"""                                                                                                       {Fore.CYAN}╔{'═' * 60}╗
+    banner = f"""
+{Fore.CYAN}╔{'═' * 60}╗
 {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}   ██████  ███████ ██ ███    ██ ████████ {Fore.CYAN}║
 {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██ ██      ██ ████   ██    ██    {Fore.CYAN}║
 {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██ ███████ ██ ██ ██  ██    ██    {Fore.CYAN}║
@@ -39,8 +40,7 @@ def get_user_input():
             term = input(f"{Fore.GREEN}└──╼ Enter Mobile Number: {Style.RESET_ALL}").strip()
             return term, "mobile", "ZYROBR0TH3R", "http://osintx.info/API/krobetahack.php"
         elif choice == "2":
-            term = input(f"{Fore.BLUE}└──╼ Enter ID Number: {Style.RESET_ALL}").strip()
-            return term, "id_number", "XXYYZZZYRO", "https://osintx.info/API/krobetahack.php"
+            term = input(f"{Fore.BLUE}└──╼ Enter ID Number: {Style.RESET_ALL}").strip()                                             return term, "id_number", "XXYYZZZYRO", "https://osintx.info/API/krobetahack.php"
         elif choice == "0":
             print(f"\n{Fore.RED}🔴 Connection Terminated. Goodbye!")
             sys.exit()
@@ -139,4 +139,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
