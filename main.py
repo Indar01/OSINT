@@ -40,7 +40,8 @@ def get_user_input():
             term = input(f"{Fore.GREEN}└──╼ Enter Mobile Number: {Style.RESET_ALL}").strip()
             return term, "mobile", "ZYROBR0TH3R", "http://osintx.info/API/krobetahack.php"
         elif choice == "2":
-            term = input(f"{Fore.BLUE}└──╼ Enter ID Number: {Style.RESET_ALL}").strip()                                             return term, "id_number", "XXYYZZZYRO", "https://osintx.info/API/krobetahack.php"
+            term = input(f"{Fore.BLUE}└──╼ Enter ID Number: {Style.RESET_ALL}").strip()
+            return term, "id_number", "XXYYZZZYRO", "https://osintx.info/API/krobetahack.php"
         elif choice == "0":
             print(f"\n{Fore.RED}🔴 Connection Terminated. Goodbye!")
             sys.exit()
@@ -72,7 +73,7 @@ def display_smart_table(data):
     }
 
     print(f"\n{Fore.YELLOW}╔═{'═' * 28}═╦═{'═' * 45}═╗")
-    print(f"{Fore.YELLOW}║ {Fore.CYAN}{Style.BRIGHT}{'FIELD NAME':^28} {Fore.YELLOW}║ {Fore.CYAN}{Style.BRIGHT}{'EXTRAC>
+    print(f"{Fore.YELLOW}║ {Fore.CYAN}{Style.BRIGHT}{'FIELD NAME':^28} {Fore.YELLOW}║ {Fore.CYAN}{Style.BRIGHT}{'EXTRACTED VALUE':^45} {Fore.YELLOW}║")
     print(f"{Fore.YELLOW}╠═{'═' * 28}═╬═{'═' * 45}═╣")
 
     address_val = None
@@ -94,7 +95,7 @@ def display_smart_table(data):
                 address_val = value
 
         print(
-            f"{Fore.YELLOW}║ {Fore.GREEN}{key_label:<28} {Fore.YELLOW}║ {Fore.WHITE}{str(value)[:45]:<45} {Fore.YELLOW}>
+            f"{Fore.YELLOW}║ {Fore.GREEN}{key_label:<28} {Fore.YELLOW}║ {Fore.WHITE}{str(value)[:45]:<45} {Fore.YELLOW}║"
         )
 
     if address_val:
