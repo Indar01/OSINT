@@ -19,3 +19,4 @@ Supports:
 - Python 3.10+
 - python-telegram-bot v20+
 - 
+![OSINT Bot](https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,100:203a43&height=200&section=header&text=OSINT%20Intelligence%20Bot&fontColor=00ffcc&fontSize=40)
