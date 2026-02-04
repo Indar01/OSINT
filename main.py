@@ -14,10 +14,12 @@ def clear_screen():
 
 def print_banner():
     clear_screen()
-    banner = f"""
-{Fore.CYAN}╔{'═' * 60}╗
-{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}   ██████  ███████ ██ ███    ██ ████████ {Fore.CYAN}║                             {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██ ██      ██ ████   ██    ██    {Fore.CYAN}║
-{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██ ███████ ██ ██ ██  ██    ██    {Fore.CYAN}║                             {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██      ██ ██ ██  ██ ██    ██    {Fore.CYAN}║                             {Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}   ██████  ███████ ██ ██   ████    ██    {Fore.CYAN}║
+    banner = f"""                                                                                                       {Fore.CYAN}╔{'═' * 60}╗
+{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}   ██████  ███████ ██ ███    ██ ████████ {Fore.CYAN}║
+{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██ ██      ██ ████   ██    ██    {Fore.CYAN}║
+{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██ ███████ ██ ██ ██  ██    ██    {Fore.CYAN}║
+{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}  ██    ██      ██ ██ ██  ██ ██    ██    {Fore.CYAN}║
+{Fore.CYAN}║{Fore.GREEN}{Style.BRIGHT}   ██████  ███████ ██ ██   ████    ██    {Fore.CYAN}║
 {Fore.CYAN}╚{'═' * 60}╝
 {Fore.YELLOW}        >> v6.0 | OSINT LINKER | EXIT OPTION ENABLED <<
 """
@@ -137,3 +139,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
