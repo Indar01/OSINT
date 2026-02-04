@@ -9,4 +9,4 @@ def check_for_updates():
         print("✅ You are using the latest version.")
 
 if __name__ == "__main__":
-    check_for_updates()
+    check_for_updates() 
